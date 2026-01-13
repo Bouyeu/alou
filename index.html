@@ -392,6 +392,108 @@
         .product-image-clickable {
             cursor: zoom-in;
         }
+
+        /* Hero Banner Styles */
+        .hero-banner {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: kenburns 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes kenburns {
+            0% {
+                transform: scale(1) translateX(0) translateY(0);
+            }
+
+            100% {
+                transform: scale(1.15) translateX(-2%) translateY(-2%);
+            }
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                    rgba(10, 10, 10, 0.85) 0%,
+                    rgba(10, 10, 10, 0.7) 30%,
+                    rgba(10, 10, 10, 0.6) 50%,
+                    rgba(10, 10, 10, 0.7) 70%,
+                    rgba(10, 10, 10, 0.85) 100%);
+        }
+
+        .hero-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center,
+                    transparent 0%,
+                    rgba(10, 10, 10, 0.3) 50%,
+                    rgba(10, 10, 10, 0.7) 100%);
+        }
+
+        /* Gold vignette effect */
+        .hero-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%,
+                    rgba(212, 175, 55, 0.1) 0%,
+                    transparent 60%);
+            mix-blend-mode: overlay;
+        }
+
+        /* Hero image edit button */
+        .hero-edit-btn {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            z-index: 20;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .hero-edit-btn.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Hero banner upload section in admin */
+        .banner-preview {
+            aspect-ratio: 16/9;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-preview-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 10, 10, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .banner-preview:hover .banner-preview-overlay {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -425,10 +527,26 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative min-h-screen flex items-center justify-center diamond-pattern overflow-hidden pt-20">
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Dynamic Hero Banner Image -->
+        <div class="hero-banner">
+            <img id="heroBannerImage" class="hero-banner-image" src="" alt="Élégance Couture Banner">
+            <div class="hero-overlay"></div>
+        </div>
+
+        <!-- Edit Banner Button (visible only when admin is logged in) -->
+        <button id="editHeroBannerBtn"
+            class="hero-edit-btn flex items-center gap-2 px-4 py-3 glass-gold rounded-full hover:bg-gold/20 transition-all">
+            <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-gold text-sm font-medium hidden sm:inline">Changer la bannière</span>
+        </button>
+
         <!-- Decorative circles -->
-        <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold/5 rounded-full blur-3xl float"></div>
-        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl float"
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold/5 rounded-full blur-3xl float z-10"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl float z-10"
             style="animation-delay: -3s;"></div>
 
         <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
@@ -735,6 +853,93 @@
         </div>
     </div>
 
+    <!-- Hero Banner Upload Modal -->
+    <div id="heroBannerModal" class="modal fixed inset-0 z-[70] flex items-center justify-center p-4 bg-noir/95">
+        <div class="modal-content glass-gold rounded-3xl p-8 w-full max-w-xl">
+            <div class="text-center mb-8">
+                <div
+                    class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                    <svg class="w-10 h-10 text-noir" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gradient">Image de Bannière</h3>
+                <p class="text-cream/60 mt-2">Personnalisez l'arrière-plan de votre header</p>
+            </div>
+
+            <!-- Current Banner Preview -->
+            <div class="mb-6">
+                <label class="block text-cream/80 text-sm font-medium mb-3">Aperçu actuel</label>
+                <div class="banner-preview glass">
+                    <img id="bannerCurrentPreview" src="" alt="Bannière actuelle">
+                    <div class="banner-preview-overlay">
+                        <span class="text-gold font-medium">Cliquez ci-dessous pour modifier</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload New Banner -->
+            <div class="mb-6">
+                <label class="block text-cream/80 text-sm font-medium mb-3">Nouvelle image</label>
+                <input type="file" id="heroBannerInput" accept="image/*" class="hidden">
+                <label for="heroBannerInput"
+                    class="flex flex-col items-center justify-center w-full py-8 glass rounded-2xl cursor-pointer hover:border-gold hover:bg-gold/5 transition-all duration-300 border-2 border-dashed border-cream/30 group">
+                    <div
+                        class="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                        <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                    </div>
+                    <p class="text-cream font-medium mb-1">Glissez ou cliquez pour uploader</p>
+                    <p class="text-cream/50 text-sm">Format 16:9 recommandé • PNG, JPG, WEBP</p>
+                </label>
+            </div>
+
+            <!-- New image preview -->
+            <div id="newBannerPreviewContainer" class="hidden mb-6">
+                <label class="block text-cream/80 text-sm font-medium mb-3">Nouvelle image sélectionnée</label>
+                <div class="banner-preview glass">
+                    <img id="newBannerPreview" src="" alt="Nouvelle bannière">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+                <button id="cancelBannerUpload"
+                    class="flex-1 py-3 rounded-xl glass text-cream hover:bg-cream/10 transition-colors">
+                    Annuler
+                </button>
+                <button id="saveBannerImage"
+                    class="flex-1 py-3 rounded-xl btn-gold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Appliquer
+                </button>
+            </div>
+
+            <!-- Reset to Default -->
+            <button id="resetBannerToDefault"
+                class="w-full mt-4 py-3 rounded-xl glass text-cream/60 hover:text-gold hover:bg-gold/10 transition-all flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Réinitialiser l'image par défaut
+            </button>
+
+            <!-- Close Button -->
+            <button id="closeHeroBannerModal"
+                class="absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center text-cream/60 hover:text-gold transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <!-- Image Lightbox Modal -->
     <div id="imageLightbox" class="lightbox fixed inset-0 z-[80] flex items-center justify-center"
         style="background: rgba(0, 0, 0, 0.97); backdrop-filter: blur(10px);">
@@ -841,6 +1046,10 @@
         // ============================================
         const STORAGE_KEY = 'elegance_couture_products';
         const AUTH_KEY = 'elegance_couture_auth';
+        const HERO_BANNER_KEY = 'elegance_couture_hero_banner';
+
+        // Default hero banner image (elegant fashion collage)
+        const DEFAULT_HERO_BANNER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='heroGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231a1a1a'/%3E%3Cstop offset='25%25' style='stop-color:%232a2a2a'/%3E%3Cstop offset='50%25' style='stop-color:%23D4AF37;stop-opacity:0.3'/%3E%3Cstop offset='75%25' style='stop-color:%231a1a1a'/%3E%3Cstop offset='100%25' style='stop-color:%230a0a0a'/%3E%3C/linearGradient%3E%3Cpattern id='fabric' patternUnits='userSpaceOnUse' width='60' height='60'%3E%3Cpath d='M0 30 Q15 0 30 30 T60 30' stroke='%23D4AF37' stroke-opacity='0.1' fill='none' stroke-width='2'/%3E%3Cpath d='M0 60 Q15 30 30 60 T60 60' stroke='%23D4AF37' stroke-opacity='0.1' fill='none' stroke-width='2'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23heroGrad)' width='1920' height='1080'/%3E%3Crect fill='url(%23fabric)' width='1920' height='1080'/%3E%3Ccircle cx='480' cy='540' r='300' fill='%23D4AF37' fill-opacity='0.05'/%3E%3Ccircle cx='1440' cy='540' r='400' fill='%23D4AF37' fill-opacity='0.03'/%3E%3Ctext x='960' y='500' font-family='Georgia,serif' font-size='120' fill='%23D4AF37' fill-opacity='0.15' text-anchor='middle'%3EÉLÉGANCE%3C/text%3E%3Ctext x='960' y='620' font-family='Georgia,serif' font-size='80' fill='%23D4AF37' fill-opacity='0.1' text-anchor='middle'%3ECOUTURE%3C/text%3E%3C/svg%3E";
 
         // Default sample products
         const defaultProducts = [
@@ -904,6 +1113,21 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
         }
 
+        // Load hero banner from localStorage or use default
+        function loadHeroBanner() {
+            return localStorage.getItem(HERO_BANNER_KEY) || DEFAULT_HERO_BANNER;
+        }
+
+        // Save hero banner to localStorage
+        function saveHeroBanner(imageData) {
+            localStorage.setItem(HERO_BANNER_KEY, imageData);
+        }
+
+        // Reset hero banner to default
+        function resetHeroBanner() {
+            localStorage.removeItem(HERO_BANNER_KEY);
+        }
+
         // ============================================
         // UI COMPONENTS
         // ============================================
@@ -919,6 +1143,16 @@
         const adminModal = document.getElementById('adminModal');
         const confirmDeleteModal = document.getElementById('confirmDeleteModal');
         const toast = document.getElementById('toast');
+
+        // Hero Banner DOM Elements
+        const heroBannerModal = document.getElementById('heroBannerModal');
+        const heroBannerImage = document.getElementById('heroBannerImage');
+        const heroBannerInput = document.getElementById('heroBannerInput');
+        const editHeroBannerBtn = document.getElementById('editHeroBannerBtn');
+        const bannerCurrentPreview = document.getElementById('bannerCurrentPreview');
+        const newBannerPreview = document.getElementById('newBannerPreview');
+        const newBannerPreviewContainer = document.getElementById('newBannerPreviewContainer');
+        let pendingBannerImage = null;
 
         // Render products
         function renderProducts() {
@@ -1167,12 +1401,123 @@
         });
 
         // Close modals on outside click
-        [loginModal, adminModal, confirmDeleteModal].forEach(modal => {
+        [loginModal, adminModal, confirmDeleteModal, heroBannerModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.classList.remove('active');
                 }
             });
+        });
+
+        // ============================================
+        // HERO BANNER MANAGEMENT
+        // ============================================
+
+        // Update hero banner visibility based on login status
+        function updateHeroBannerEditButton() {
+            if (isLoggedIn) {
+                editHeroBannerBtn.classList.add('visible');
+            } else {
+                editHeroBannerBtn.classList.remove('visible');
+            }
+        }
+
+        // Load and display the hero banner
+        function initHeroBanner() {
+            const bannerSrc = loadHeroBanner();
+            heroBannerImage.src = bannerSrc;
+            bannerCurrentPreview.src = bannerSrc;
+            updateHeroBannerEditButton();
+        }
+
+        // Open hero banner modal
+        editHeroBannerBtn.addEventListener('click', () => {
+            bannerCurrentPreview.src = loadHeroBanner();
+            newBannerPreviewContainer.classList.add('hidden');
+            pendingBannerImage = null;
+            heroBannerModal.classList.add('active');
+        });
+
+        // Handle hero banner file input
+        heroBannerInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (max 10MB for banner)
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('Image trop volumineuse (max 10MB)', false);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    pendingBannerImage = event.target.result;
+                    newBannerPreview.src = pendingBannerImage;
+                    newBannerPreviewContainer.classList.remove('hidden');
+
+                    // Animate preview
+                    gsap.fromTo(newBannerPreviewContainer,
+                        { opacity: 0, y: 20 },
+                        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+                    );
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save banner image
+        document.getElementById('saveBannerImage').addEventListener('click', () => {
+            if (pendingBannerImage) {
+                saveHeroBanner(pendingBannerImage);
+                heroBannerImage.src = pendingBannerImage;
+                bannerCurrentPreview.src = pendingBannerImage;
+
+                // Animate the hero banner change
+                gsap.fromTo(heroBannerImage,
+                    { opacity: 0, scale: 1.1 },
+                    { opacity: 1, scale: 1, duration: 0.8, ease: 'power2.out' }
+                );
+
+                heroBannerModal.classList.remove('active');
+                showToast('Bannière mise à jour avec succès !');
+                pendingBannerImage = null;
+                heroBannerInput.value = '';
+            } else {
+                showToast('Veuillez sélectionner une image', false);
+            }
+        });
+
+        // Cancel banner upload
+        document.getElementById('cancelBannerUpload').addEventListener('click', () => {
+            heroBannerModal.classList.remove('active');
+            pendingBannerImage = null;
+            heroBannerInput.value = '';
+            newBannerPreviewContainer.classList.add('hidden');
+        });
+
+        // Close hero banner modal
+        document.getElementById('closeHeroBannerModal').addEventListener('click', () => {
+            heroBannerModal.classList.remove('active');
+            pendingBannerImage = null;
+            heroBannerInput.value = '';
+            newBannerPreviewContainer.classList.add('hidden');
+        });
+
+        // Reset banner to default
+        document.getElementById('resetBannerToDefault').addEventListener('click', () => {
+            resetHeroBanner();
+            heroBannerImage.src = DEFAULT_HERO_BANNER;
+            bannerCurrentPreview.src = DEFAULT_HERO_BANNER;
+            newBannerPreviewContainer.classList.add('hidden');
+            pendingBannerImage = null;
+
+            // Animate the reset
+            gsap.fromTo(heroBannerImage,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.6, ease: 'power2.out' }
+            );
+
+            heroBannerModal.classList.remove('active');
+            showToast('Bannière réinitialisée');
         });
 
         // ============================================
@@ -1415,6 +1760,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
             initScrollAnimations();
+            initHeroBanner();
             renderProducts();
 
             // Animate hero on load
