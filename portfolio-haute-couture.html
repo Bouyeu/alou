@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÉLÉGANCE COUTURE | Portfolio Haute Couture</title>
+    <meta name="description"
+        content="Collection exclusive de haute couture africaine et européenne - Modèles traditionnels, robes de créateur et accessoires de luxe">
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        'gold-light': '#E5C76B',
+                        'gold-dark': '#B8960C',
+                        noir: '#0A0A0A',
+                        'noir-light': '#1A1A1A',
+                        cream: '#F8F4E6',
+                        'cream-dark': '#E8E4D6',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .glass-gold {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Gold gradient text */
+        .text-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #E5C76B 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 3D Card effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(10deg) rotateX(5deg) translateZ(30px);
+        }
+
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            border-radius: inherit;
+        }
+
+        .card-3d:hover::before {
+            opacity: 1;
+        }
+
+        /* Parallax background */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Shimmer effect */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #D4AF37 0%, #E5C76B 25%, #D4AF37 50%, #E5C76B 75%, #D4AF37 100%);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+
+        /* Pulse glow */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.6);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Tab styles */
+        .tab-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #D4AF37, #E5C76B);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateX(-50%);
+        }
+
+        .tab-btn.active::after,
+        .tab-btn:hover::after {
+            width: 100%;
+        }
+
+        .tab-btn.active {
+            color: #D4AF37;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Modal styles */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #D4AF37, #B8960C);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #E5C76B, #D4AF37);
+        }
+
+        /* Product card image */
+        .product-image {
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        /* Decorative elements */
+        .gold-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+        }
+
+        .diamond-pattern {
+            background-image:
+                linear-gradient(45deg, rgba(212, 175, 55, 0.03) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(212, 175, 55, 0.03) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(212, 175, 55, 0.03) 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        }
+
+        /* Input styles */
+        .input-gold {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+        }
+
+        .input-gold:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            outline: none;
+        }
+
+        /* Button gold */
+        .btn-gold {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
+            color: #0A0A0A;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-gold:hover::before {
+            left: 100%;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Delete button */
+        .btn-danger {
+            background: linear-gradient(135deg, #8B0000 0%, #5C0000 100%);
+            transition: all 0.4s;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4);
+        }
+
+        /* Hero particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #D4AF37;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(212, 175, 55, 0.1);
+            border-top-color: #D4AF37;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-image-container {
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .lightbox.active .lightbox-image-container {
+            transform: scale(1);
+        }
+
+        .lightbox-image {
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            max-height: 80vh;
+            max-width: 90vw;
+            object-fit: contain;
+        }
+
+        /* Control buttons */
+        .control-btn {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #D4AF37;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(212, 175, 55, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .control-btn.active {
+            background: #D4AF37;
+            color: #0A0A0A;
+        }
+
+        /* Zoom indicator */
+        .zoom-indicator {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Product card clickable */
+        .product-image-clickable {
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+
+<body class="font-poppins text-cream">
+    <!-- Floating Particles Background -->
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <h1 class="text-2xl md:text-3xl font-bold">
+                        <span class="text-gradient">ÉLÉGANCE</span>
+                        <span class="text-cream font-light">COUTURE</span>
+                    </h1>
+                </div>
+
+                <!-- Admin Button -->
+                <button id="adminBtn"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full glass-gold hover:bg-gold/20 transition-all duration-300">
+                    <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-gold font-medium hidden sm:inline">Admin</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center diamond-pattern overflow-hidden pt-20">
+        <!-- Decorative circles -->
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-gold/5 rounded-full blur-3xl float"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl float"
+            style="animation-delay: -3s;"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <div class="mb-6">
+                <span
+                    class="inline-block px-6 py-2 glass-gold rounded-full text-gold text-sm font-medium tracking-widest uppercase shimmer">
+                    Collection Exclusive 2024
+                </span>
+            </div>
+
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                <span class="text-cream">L'Art de la</span><br>
+                <span class="text-gradient">Haute Couture</span>
+            </h2>
+
+            <p class="text-lg md:text-xl text-cream/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Découvrez notre collection unique alliant l'élégance africaine traditionnelle
+                à la sophistication européenne. Chaque pièce raconte une histoire d'excellence.
+            </p>
+
+            <div class="gold-line w-32 mx-auto mb-10"></div>
+
+            <a href="#collection"
+                class="inline-flex items-center gap-3 btn-gold px-8 py-4 rounded-full text-lg pulse-glow">
+                <span>Explorer la Collection</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+            </a>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+            <div class="w-6 h-10 rounded-full border-2 border-gold/50 flex justify-center">
+                <div class="w-1.5 h-3 bg-gold rounded-full mt-2 animate-bounce"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Collection Section -->
+    <main id="collection" class="relative py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Title -->
+            <div class="text-center mb-16">
+                <h3 class="text-3xl md:text-5xl font-bold mb-4">
+                    <span class="text-gradient">Notre Collection</span>
+                </h3>
+                <p class="text-cream/60 max-w-xl mx-auto">
+                    Explorez nos créations uniques à travers trois univers distincts
+                </p>
+                <div class="gold-line w-24 mx-auto mt-6"></div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-16">
+                <button
+                    class="tab-btn active px-6 md:px-10 py-4 text-lg md:text-xl font-semibold text-cream/70 hover:text-gold transition-colors"
+                    data-tab="africain">
+                    <span class="flex items-center gap-3">
+                        <span class="text-2xl">🌍</span>
+                        <span>Africain</span>
+                    </span>
+                </button>
+                <button
+                    class="tab-btn px-6 md:px-10 py-4 text-lg md:text-xl font-semibold text-cream/70 hover:text-gold transition-colors"
+                    data-tab="europeen">
+                    <span class="flex items-center gap-3">
+                        <span class="text-2xl">👗</span>
+                        <span>Européen</span>
+                    </span>
+                </button>
+                <button
+                    class="tab-btn px-6 md:px-10 py-4 text-lg md:text-xl font-semibold text-cream/70 hover:text-gold transition-colors"
+                    data-tab="accessoires">
+                    <span class="flex items-center gap-3">
+                        <span class="text-2xl">💎</span>
+                        <span>Accessoires</span>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Products Grid - Larger cards -->
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                <!-- Products will be loaded here dynamically -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-20">
+                <div class="text-6xl mb-6">✨</div>
+                <h4 class="text-2xl font-semibold text-cream mb-3">Aucun produit dans cette catégorie</h4>
+                <p class="text-cream/60">Utilisez le panneau admin pour ajouter des créations</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h4 class="text-2xl font-bold text-gradient mb-4">ÉLÉGANCE COUTURE</h4>
+            <p class="text-cream/60 mb-6">L'excellence dans chaque détail</p>
+            <div class="gold-line w-24 mx-auto mb-6"></div>
+            <p class="text-cream/40 text-sm">© 2024 Élégance Couture. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-noir/90">
+        <div class="modal-content glass-gold rounded-3xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div
+                    class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                    <svg class="w-10 h-10 text-noir" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gradient">Connexion Admin</h3>
+                <p class="text-cream/60 mt-2">Accédez au panneau d'administration</p>
+            </div>
+
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-cream/80 text-sm font-medium mb-2">Identifiant</label>
+                    <input type="text" id="loginUsername" class="input-gold w-full px-4 py-3 rounded-xl text-cream"
+                        placeholder="Entrez votre identifiant" required>
+                </div>
+                <div>
+                    <label class="block text-cream/80 text-sm font-medium mb-2">Mot de passe</label>
+                    <input type="password" id="loginPassword" class="input-gold w-full px-4 py-3 rounded-xl text-cream"
+                        placeholder="Entrez votre mot de passe" required>
+                </div>
+                <div id="loginError" class="hidden text-red-400 text-sm text-center"></div>
+                <button type="submit" class="btn-gold w-full py-4 rounded-xl text-lg">
+                    Se connecter
+                </button>
+            </form>
+
+            <button id="closeLoginModal"
+                class="absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center text-cream/60 hover:text-gold transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="adminModal"
+        class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-noir/90 overflow-y-auto">
+        <div class="modal-content glass-gold rounded-3xl p-6 md:p-8 w-full max-w-2xl my-8">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-gradient">Panneau Admin</h3>
+                    <p class="text-cream/60 mt-1">Gérez votre collection</p>
+                </div>
+                <button id="logoutBtn"
+                    class="flex items-center gap-2 px-4 py-2 rounded-full glass text-cream/70 hover:text-gold transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span class="hidden sm:inline">Déconnexion</span>
+                </button>
+            </div>
+
+            <!-- Add Product Form -->
+            <form id="addProductForm" class="space-y-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Image Upload - LARGER -->
+                    <div class="md:col-span-2">
+                        <label class="block text-cream/80 text-sm font-medium mb-3">Image du produit *</label>
+                        <div class="relative">
+                            <input type="file" id="productImage" accept="image/*" class="hidden" required>
+                            <label for="productImage"
+                                class="flex flex-col items-center justify-center w-full h-80 glass rounded-3xl cursor-pointer hover:border-gold hover:bg-gold/5 transition-all duration-300 border-2 border-dashed border-cream/30 group">
+                                <div id="imagePreviewContainer" class="hidden w-full h-full relative">
+                                    <img id="imagePreview" class="w-full h-full object-cover rounded-3xl" src=""
+                                        alt="Preview">
+                                    <div
+                                        class="absolute inset-0 bg-noir/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-3xl">
+                                        <span class="text-gold font-medium">Cliquez pour changer</span>
+                                    </div>
+                                </div>
+                                <div id="uploadPlaceholder" class="text-center p-8">
+                                    <div
+                                        class="w-20 h-20 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                                        <svg class="w-10 h-10 text-gold" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <p class="text-cream text-lg font-medium mb-2">Glissez ou cliquez pour uploader</p>
+                                    <p class="text-cream/50 text-sm">PNG, JPG, WEBP • Max 5MB</p>
+                                    <p class="text-gold/60 text-xs mt-3">📸 Haute résolution recommandée</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div>
+                        <label class="block text-cream/80 text-sm font-medium mb-2">Titre *</label>
+                        <input type="text" id="productTitle" class="input-gold w-full px-4 py-3 rounded-xl text-cream"
+                            placeholder="Ex: Boubou Royal Doré" required>
+                    </div>
+
+                    <!-- Price -->
+                    <div>
+                        <label class="block text-cream/80 text-sm font-medium mb-2">Prix (optionnel)</label>
+                        <div class="relative">
+                            <input type="text" id="productPrice"
+                                class="input-gold w-full px-4 py-3 pl-12 rounded-xl text-cream"
+                                placeholder="Ex: 150 000">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gold">€</span>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="md:col-span-2">
+                        <label class="block text-cream/80 text-sm font-medium mb-2">Catégorie *</label>
+                        <select id="productCategory"
+                            class="input-gold w-full px-4 py-3 rounded-xl text-cream appearance-none cursor-pointer"
+                            required>
+                            <option value="" disabled selected>Sélectionnez une catégorie</option>
+                            <option value="africain">🌍 Africain</option>
+                            <option value="europeen">👗 Européen</option>
+                            <option value="accessoires">💎 Accessoires</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="btn-gold w-full py-4 rounded-xl text-lg flex items-center justify-center gap-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Ajouter le produit
+                </button>
+            </form>
+
+            <div class="gold-line w-full mb-8"></div>
+
+            <!-- Statistics -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="glass rounded-2xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gold" id="statAfricain">0</p>
+                    <p class="text-cream/60 text-sm">Africain</p>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gold" id="statEuropeen">0</p>
+                    <p class="text-cream/60 text-sm">Européen</p>
+                </div>
+                <div class="glass rounded-2xl p-4 text-center">
+                    <p class="text-2xl font-bold text-gold" id="statAccessoires">0</p>
+                    <p class="text-cream/60 text-sm">Accessoires</p>
+                </div>
+            </div>
+
+            <!-- Delete All Button -->
+            <button id="deleteAllBtn"
+                class="btn-danger w-full py-4 rounded-xl text-cream flex items-center justify-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Supprimer tous les produits
+            </button>
+
+            <!-- Close Button -->
+            <button id="closeAdminModal"
+                class="absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center text-cream/60 hover:text-gold transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmDeleteModal" class="modal fixed inset-0 z-[60] flex items-center justify-center p-4 bg-noir/95">
+        <div class="modal-content glass-gold rounded-3xl p-8 w-full max-w-md text-center">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-900/30 flex items-center justify-center">
+                <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-cream mb-3">Confirmer la suppression</h3>
+            <p class="text-cream/60 mb-8">Êtes-vous sûr de vouloir supprimer tous les produits ? Cette action est
+                irréversible.</p>
+            <div class="flex gap-4">
+                <button id="cancelDelete"
+                    class="flex-1 py-3 rounded-xl glass text-cream hover:bg-cream/10 transition-colors">
+                    Annuler
+                </button>
+                <button id="confirmDelete" class="flex-1 py-3 rounded-xl btn-danger text-cream">
+                    Supprimer tout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="imageLightbox" class="lightbox fixed inset-0 z-[80] flex items-center justify-center"
+        style="background: rgba(0, 0, 0, 0.97); backdrop-filter: blur(10px);">
+        <!-- Close button -->
+        <button id="closeLightbox"
+            class="absolute top-6 right-6 w-12 h-12 rounded-full control-btn flex items-center justify-center z-10">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Product info -->
+        <div class="absolute top-6 left-6 z-10">
+            <h4 id="lightboxTitle" class="text-xl font-bold text-gradient"></h4>
+            <p id="lightboxPrice" class="text-gold/80 mt-1"></p>
+        </div>
+
+        <!-- Image container -->
+        <div class="lightbox-image-container relative">
+            <img id="lightboxImage" class="lightbox-image rounded-2xl shadow-2xl" src="" alt="">
+        </div>
+
+        <!-- Controls panel -->
+        <div
+            class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4 glass-gold rounded-full px-6 py-3">
+            <!-- Rotation controls -->
+            <div class="flex items-center gap-2">
+                <span class="text-cream/60 text-sm mr-2">Rotation:</span>
+                <button id="rotateLeft" class="control-btn w-10 h-10 rounded-full flex items-center justify-center"
+                    title="Tourner à gauche">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                    </svg>
+                </button>
+                <button id="rotateRight" class="control-btn w-10 h-10 rounded-full flex items-center justify-center"
+                    title="Tourner à droite">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="w-px h-8 bg-gold/30"></div>
+
+            <!-- Zoom controls -->
+            <div class="flex items-center gap-2">
+                <span class="text-cream/60 text-sm mr-2">Zoom:</span>
+                <button id="zoomOut" class="control-btn w-10 h-10 rounded-full flex items-center justify-center"
+                    title="Dézoomer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+                    </svg>
+                </button>
+                <div id="zoomLevel"
+                    class="zoom-indicator px-3 py-1 rounded-full text-gold text-sm font-medium min-w-[60px] text-center">
+                    100%</div>
+                <button id="zoomIn" class="control-btn w-10 h-10 rounded-full flex items-center justify-center"
+                    title="Zoomer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="w-px h-8 bg-gold/30"></div>
+
+            <!-- Reset button -->
+            <button id="resetView" class="control-btn px-4 py-2 rounded-full flex items-center gap-2"
+                title="Réinitialiser">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span class="text-sm">Reset</span>
+            </button>
+        </div>
+
+        <!-- Rotation degree indicator -->
+        <div id="rotationIndicator"
+            class="absolute top-1/2 left-6 transform -translate-y-1/2 glass-gold rounded-xl px-4 py-3 text-center">
+            <p class="text-cream/60 text-xs mb-1">Angle</p>
+            <p id="rotationDegree" class="text-gold text-2xl font-bold">0°</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"
+        class="fixed bottom-6 right-6 z-[90] glass-gold rounded-2xl p-4 flex items-center gap-3 transform translate-y-32 opacity-0 transition-all duration-500">
+        <div id="toastIcon" class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+        <p id="toastMessage" class="text-cream font-medium">Produit ajouté avec succès !</p>
+    </div>
+
+    <script>
+        // ============================================
+        // DATA MANAGEMENT
+        // ============================================
+        const STORAGE_KEY = 'elegance_couture_products';
+        const AUTH_KEY = 'elegance_couture_auth';
+
+        // Default sample products
+        const defaultProducts = [
+            {
+                id: Date.now() + 1,
+                title: "Boubou Royal Brodé",
+                price: "250 000",
+                category: "africain",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23D4AF37'/%3E%3Cstop offset='100%25' style='stop-color:%23B8960C'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%230A0A0A' text-anchor='middle'%3E👘%3C/text%3E%3C/svg%3E"
+            },
+            {
+                id: Date.now() + 2,
+                title: "Robe Wax Moderne",
+                price: "180 000",
+                category: "africain",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23E5C76B'/%3E%3Cstop offset='100%25' style='stop-color:%23D4AF37'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg2)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%230A0A0A' text-anchor='middle'%3E🌺%3C/text%3E%3C/svg%3E"
+            },
+            {
+                id: Date.now() + 3,
+                title: "Robe de Soirée Élégante",
+                price: "320 000",
+                category: "europeen",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231A1A1A'/%3E%3Cstop offset='100%25' style='stop-color:%230A0A0A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg3)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%23D4AF37' text-anchor='middle'%3E👗%3C/text%3E%3C/svg%3E"
+            },
+            {
+                id: Date.now() + 4,
+                title: "Costume Trois Pièces",
+                price: "450 000",
+                category: "europeen",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%232A2A2A'/%3E%3Cstop offset='100%25' style='stop-color:%231A1A1A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg4)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%23D4AF37' text-anchor='middle'%3E🤵%3C/text%3E%3C/svg%3E"
+            },
+            {
+                id: Date.now() + 5,
+                title: "Collier Or 24K",
+                price: "85 000",
+                category: "accessoires",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg5' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23D4AF37'/%3E%3Cstop offset='50%25' style='stop-color:%23E5C76B'/%3E%3Cstop offset='100%25' style='stop-color:%23D4AF37'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg5)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%230A0A0A' text-anchor='middle'%3E💎%3C/text%3E%3C/svg%3E"
+            },
+            {
+                id: Date.now() + 6,
+                title: "Sac Cuir Premium",
+                price: "120 000",
+                category: "accessoires",
+                image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Cdefs%3E%3ClinearGradient id='bg6' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23B8960C'/%3E%3Cstop offset='100%25' style='stop-color:%23D4AF37'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23bg6)' width='400' height='500'/%3E%3Ctext x='200' y='250' font-family='Arial' font-size='60' fill='%230A0A0A' text-anchor='middle'%3E👜%3C/text%3E%3C/svg%3E"
+            }
+        ];
+
+        // Load products from localStorage or use defaults
+        function loadProducts() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+            // Initialize with default products
+            saveProducts(defaultProducts);
+            return defaultProducts;
+        }
+
+        // Save products to localStorage
+        function saveProducts(products) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+        }
+
+        // ============================================
+        // UI COMPONENTS
+        // ============================================
+        let currentTab = 'africain';
+        let products = loadProducts();
+        let isLoggedIn = localStorage.getItem(AUTH_KEY) === 'true';
+
+        // DOM Elements
+        const productsGrid = document.getElementById('productsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const loginModal = document.getElementById('loginModal');
+        const adminModal = document.getElementById('adminModal');
+        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+        const toast = document.getElementById('toast');
+
+        // Render products
+        function renderProducts() {
+            const filteredProducts = products.filter(p => p.category === currentTab);
+
+            if (filteredProducts.length === 0) {
+                productsGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            productsGrid.innerHTML = filteredProducts.map((product, index) => `
+                <div class="product-card card-3d glass rounded-3xl overflow-hidden group" style="animation-delay: ${index * 0.1}s">
+                    <div class="relative h-96 overflow-hidden product-image-clickable" onclick="openLightbox(${product.id})">
+                        <img src="${product.image}" alt="${product.title}" class="product-image w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-noir via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <!-- Zoom icon overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div class="w-16 h-16 rounded-full bg-gold/20 backdrop-blur-sm flex items-center justify-center border border-gold/40">
+                                <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        ${isLoggedIn ? `
+                            <button onclick="event.stopPropagation(); deleteProduct(${product.id})" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-red-900/80 flex items-center justify-center text-cream opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-red-700 z-10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold text-cream mb-2 line-clamp-2">${product.title}</h4>
+                        ${product.price ? `
+                            <p class="text-gold font-bold text-2xl">${product.price} FCFA</p>
+                        ` : `
+                            <p class="text-gold/60 italic text-lg">Prix sur demande</p>
+                        `}
+                        <p class="text-cream/40 text-sm mt-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            Cliquez pour agrandir
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Animate cards
+            animateCards();
+        }
+
+        // Animate cards with GSAP
+        function animateCards() {
+            gsap.fromTo('.product-card',
+                { opacity: 0, y: 50 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.1,
+                    ease: 'power3.out'
+                }
+            );
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('statAfricain').textContent = products.filter(p => p.category === 'africain').length;
+            document.getElementById('statEuropeen').textContent = products.filter(p => p.category === 'europeen').length;
+            document.getElementById('statAccessoires').textContent = products.filter(p => p.category === 'accessoires').length;
+        }
+
+        // Show toast notification
+        function showToast(message, success = true) {
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMessage.textContent = message;
+            toastIcon.innerHTML = success
+                ? `<svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`
+                : `<svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+
+        // Tab switching
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTab = btn.dataset.tab;
+                renderProducts();
+            });
+        });
+
+        // Admin button
+        document.getElementById('adminBtn').addEventListener('click', () => {
+            if (isLoggedIn) {
+                adminModal.classList.add('active');
+                updateStats();
+            } else {
+                loginModal.classList.add('active');
+            }
+        });
+
+        // Close modals
+        document.getElementById('closeLoginModal').addEventListener('click', () => {
+            loginModal.classList.remove('active');
+        });
+
+        document.getElementById('closeAdminModal').addEventListener('click', () => {
+            adminModal.classList.remove('active');
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username === 'admin' && password === 'admin') {
+                isLoggedIn = true;
+                localStorage.setItem(AUTH_KEY, 'true');
+                loginModal.classList.remove('active');
+                adminModal.classList.add('active');
+                updateStats();
+                renderProducts();
+                showToast('Connexion réussie !');
+            } else {
+                document.getElementById('loginError').textContent = 'Identifiants incorrects';
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            isLoggedIn = false;
+            localStorage.removeItem(AUTH_KEY);
+            adminModal.classList.remove('active');
+            renderProducts();
+            showToast('Déconnexion réussie');
+        });
+
+        // Image preview
+        document.getElementById('productImage').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById('imagePreview').src = event.target.result;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Add product form
+        document.getElementById('addProductForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const imageInput = document.getElementById('productImage');
+            const title = document.getElementById('productTitle').value;
+            const price = document.getElementById('productPrice').value;
+            const category = document.getElementById('productCategory').value;
+
+            if (!imageInput.files[0]) {
+                showToast('Veuillez sélectionner une image', false);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const newProduct = {
+                    id: Date.now(),
+                    title: title,
+                    price: price || null,
+                    category: category,
+                    image: event.target.result
+                };
+
+                products.push(newProduct);
+                saveProducts(products);
+                updateStats();
+
+                // Switch to the category of the new product
+                currentTab = category;
+                tabBtns.forEach(b => {
+                    b.classList.remove('active');
+                    if (b.dataset.tab === category) b.classList.add('active');
+                });
+
+                renderProducts();
+                showToast('Produit ajouté avec succès !');
+
+                // Reset form
+                document.getElementById('addProductForm').reset();
+                document.getElementById('imagePreviewContainer').classList.add('hidden');
+                document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            };
+            reader.readAsDataURL(imageInput.files[0]);
+        });
+
+        // Delete single product
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveProducts(products);
+            renderProducts();
+            updateStats();
+            showToast('Produit supprimé');
+        }
+
+        // Delete all button
+        document.getElementById('deleteAllBtn').addEventListener('click', () => {
+            confirmDeleteModal.classList.add('active');
+        });
+
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            confirmDeleteModal.classList.remove('active');
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            products = [];
+            saveProducts(products);
+            confirmDeleteModal.classList.remove('active');
+            renderProducts();
+            updateStats();
+            showToast('Tous les produits ont été supprimés');
+        });
+
+        // Close modals on outside click
+        [loginModal, adminModal, confirmDeleteModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // ============================================
+        // IMAGE LIGHTBOX
+        // ============================================
+        const imageLightbox = document.getElementById('imageLightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxPrice = document.getElementById('lightboxPrice');
+        const zoomLevel = document.getElementById('zoomLevel');
+        const rotationDegree = document.getElementById('rotationDegree');
+
+        let currentZoom = 1;
+        let currentRotation = 0;
+        let currentProductId = null;
+
+        // Open lightbox
+        function openLightbox(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            currentProductId = productId;
+            currentZoom = 1;
+            currentRotation = 0;
+
+            lightboxImage.src = product.image;
+            lightboxImage.alt = product.title;
+            lightboxTitle.textContent = product.title;
+            lightboxPrice.textContent = product.price ? `${product.price} FCFA` : 'Prix sur demande';
+
+            updateImageTransform();
+            imageLightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // GSAP animation
+            gsap.fromTo(lightboxImage,
+                { scale: 0.5, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' }
+            );
+        }
+
+        // Close lightbox
+        function closeLightbox() {
+            gsap.to(lightboxImage, {
+                scale: 0.5,
+                opacity: 0,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => {
+                    imageLightbox.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        // Update image transform
+        function updateImageTransform() {
+            lightboxImage.style.transform = `rotate(${currentRotation}deg) scale(${currentZoom})`;
+            zoomLevel.textContent = `${Math.round(currentZoom * 100)}%`;
+            rotationDegree.textContent = `${currentRotation}°`;
+        }
+
+        // Rotate left
+        document.getElementById('rotateLeft').addEventListener('click', () => {
+            currentRotation -= 90;
+            if (currentRotation < 0) currentRotation = 270;
+            updateImageTransform();
+            gsap.fromTo('#rotationIndicator', { scale: 1.2 }, { scale: 1, duration: 0.3 });
+        });
+
+        // Rotate right
+        document.getElementById('rotateRight').addEventListener('click', () => {
+            currentRotation += 90;
+            if (currentRotation >= 360) currentRotation = 0;
+            updateImageTransform();
+            gsap.fromTo('#rotationIndicator', { scale: 1.2 }, { scale: 1, duration: 0.3 });
+        });
+
+        // Zoom in
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            if (currentZoom < 3) {
+                currentZoom += 0.25;
+                updateImageTransform();
+            }
+        });
+
+        // Zoom out
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            if (currentZoom > 0.5) {
+                currentZoom -= 0.25;
+                updateImageTransform();
+            }
+        });
+
+        // Reset view
+        document.getElementById('resetView').addEventListener('click', () => {
+            currentZoom = 1;
+            currentRotation = 0;
+            updateImageTransform();
+            gsap.fromTo(lightboxImage, { scale: 0.9 }, { scale: 1, duration: 0.3, ease: 'back.out(1.7)' });
+        });
+
+        // Close lightbox button
+        document.getElementById('closeLightbox').addEventListener('click', closeLightbox);
+
+        // Close on background click
+        imageLightbox.addEventListener('click', (e) => {
+            if (e.target === imageLightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!imageLightbox.classList.contains('active')) return;
+
+            switch (e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    currentRotation -= 90;
+                    if (currentRotation < 0) currentRotation = 270;
+                    updateImageTransform();
+                    break;
+                case 'ArrowRight':
+                    currentRotation += 90;
+                    if (currentRotation >= 360) currentRotation = 0;
+                    updateImageTransform();
+                    break;
+                case '+':
+                case '=':
+                    if (currentZoom < 3) {
+                        currentZoom += 0.25;
+                        updateImageTransform();
+                    }
+                    break;
+                case '-':
+                    if (currentZoom > 0.5) {
+                        currentZoom -= 0.25;
+                        updateImageTransform();
+                    }
+                    break;
+                case '0':
+                    currentZoom = 1;
+                    currentRotation = 0;
+                    updateImageTransform();
+                    break;
+            }
+        });
+
+        // Mouse wheel zoom
+        lightboxImage.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (e.deltaY < 0 && currentZoom < 3) {
+                currentZoom += 0.1;
+            } else if (e.deltaY > 0 && currentZoom > 0.5) {
+                currentZoom -= 0.1;
+            }
+            updateImageTransform();
+        });
+
+        // ============================================
+        // ANIMATIONS & EFFECTS
+        // ============================================
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                particlesContainer.appendChild(particle);
+
+                // Animate particle
+                gsap.to(particle, {
+                    y: -window.innerHeight,
+                    x: (Math.random() - 0.5) * 200,
+                    duration: Math.random() * 10 + 10,
+                    repeat: -1,
+                    ease: 'none',
+                    delay: Math.random() * 5
+                });
+            }
+        }
+
+        // Initialize GSAP ScrollTrigger
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero parallax
+            gsap.to('.float', {
+                scrollTrigger: {
+                    trigger: 'header',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: 1
+                },
+                y: 100,
+                opacity: 0.2
+            });
+
+            // Section title animation
+            gsap.from('#collection h3', {
+                scrollTrigger: {
+                    trigger: '#collection',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                ease: 'power3.out'
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initScrollAnimations();
+            renderProducts();
+
+            // Animate hero on load
+            gsap.from('header h2', {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                delay: 0.3,
+                ease: 'power3.out'
+            });
+
+            gsap.from('header p', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: 0.5,
+                ease: 'power3.out'
+            });
+
+            gsap.from('header a', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                delay: 0.7,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+
+</html>
